@@ -1,0 +1,69 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+    {
+      "label": "vdi: bootstrap & configure",
+      "type": "shell",
+      "command": "ssh -t vdi 'cd ${workspaceFolder} && ./bootstrap && ./configure --prefix=/home/asayin/openocd_ubuntu22/ --enable-ftdi'",
+      "options": {
+        "statusbar": {
+          "hide": true,
+          "color": "#d3d3d3"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "rtl01: bootstrap & configure",
+      "type": "shell",
+      "command": "ssh -t rtl01 'cd ${workspaceFolder} && ./bootstrap && ./configure --prefix=/home/asayin/openocd_rhle8/ --enable-ftdi'",
+      "options": {
+        "statusbar": {
+          "hide": true,
+          "color": "#d3d3d3"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "vdi: make & copy",
+      "type": "shell",
+      "command": "ssh -t vdi 'cd ${workspaceFolder} && make -j  && cp ./src/openocd /proj/driverlab/asayin/openocd_ubuntu22/bin/'",
+      "options": {
+        "statusbar": {
+          "hide": true,
+          "color": "#d3d3d3"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "rtl01: make & copy",
+      "type": "shell",
+      "command": "ssh -t rtl01 'cd ${workspaceFolder} && make -j && cp ./src/openocd /proj/driverlab/asayin/openocd_rhel8/bin/'",
+      "options": {
+        "statusbar": {
+          "hide": true,
+          "color": "#d3d3d3"
+        }
+      },
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+  ]
+}

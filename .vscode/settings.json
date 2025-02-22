@@ -1,0 +1,26 @@
+{
+  "C_Cpp.intelliSenseEngine": "Tag Parser",
+  "files.associations": {
+    "*.S": "microblaze",
+    "*.lst": "c",
+    "*.dtsh": "dts",
+    "*.trigger": "julia",
+    "*.do": "julia",
+    "array": "c",
+    "hash_map": "c",
+    "hash_set": "c",
+    "string_view": "c",
+    "initializer_list": "c",
+    "utility": "c",
+    "functional": "c",
+    "optional": "c",
+    "istream": "c",
+    "ostream": "c",
+    "ratio": "c",
+    "system_error": "c",
+    "tuple": "c",
+    "type_traits": "c",
+    "typeinfo": "c",
+    "random": "c"
+  }
+}
