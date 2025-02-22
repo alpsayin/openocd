@@ -487,6 +487,13 @@ static int zephyr_get_riscv_state(struct rtos *rtos, target_addr_t *addr,
 
 	LOG_DEBUG("Marker 0");
 
+#if 1
+	for (int i = 0; i < num_callee_saved_regs; i++) {
+		LOG_OUTPUT("%x ", *(uint32_t *)callee_saved_reg_list[i].value);
+	}
+	LOG_OUTPUT("\r\n");
+#endif
+
 	/* This part is a bit weird; this is absolutely necessary because rtos_generic_stack_read initializes
 	 * a neat little GDB compatible register list for us. But then we move onto reading some bogus values
 	 * because indexes are incompatble with the Zephyr callee-saved layout.

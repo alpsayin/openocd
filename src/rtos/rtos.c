@@ -611,7 +611,7 @@ int rtos_generic_stack_read(struct target *target,
 	}
 	LOG_DEBUG("RTOS: Read stack frame at 0x%" PRIx32, address);
 
-#if 1
+#if 0
 		LOG_OUTPUT("Stack Data addr=0x%lx: ", stack_ptr);
 		for (int _i = 0; _i < stacking->stack_registers_size; _i+=4)
 			LOG_OUTPUT("%02x%02x%02x%02x ", stack_data[_i+3], stack_data[_i+2], stack_data[_i+1], stack_data[_i]);
