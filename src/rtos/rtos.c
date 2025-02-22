@@ -556,12 +556,14 @@ int rtos_get_gdb_reg_list(struct connection *connection)
 				current_threadid,
 				&reg_list,
 				&num_regs);
+		alp_trace("Marker 4");
 		if (retval != ERROR_OK) {
 			LOG_ERROR("RTOS: failed to get register list");
 			return retval;
 		}
 
 		rtos_put_gdb_reg_list(connection, reg_list, num_regs);
+		alp_trace("Marker 5");
 		free(reg_list);
 
 		return ERROR_OK;
