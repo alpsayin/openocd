@@ -393,19 +393,21 @@ static void dump_field(int idle, const struct scan_field *field)
 	unsigned int in_data = get_field(in, DTM_DMI_DATA);
 	unsigned int in_address = in >> DTM_DMI_ADDRESS_OFFSET;
 
-	log_printf_lf(LOG_LVL_DEBUG,
-			__FILE__, __LINE__, "scan",
-			"%db %s %08x @%02x -> %s %08x @%02x; %di",
-			field->num_bits, op_string[out_op], out_data, out_address,
-			status_string[in_op], in_data, in_address, idle);
+	if (0)
+		log_printf_lf(LOG_LVL_DEBUG,
+				__FILE__, __LINE__, "scan",
+				"%db %s %08x @%02x -> %s %08x @%02x; %di",
+				field->num_bits, op_string[out_op], out_data, out_address,
+				status_string[in_op], in_data, in_address, idle);
 
 	char out_text[500];
 	char in_text[500];
 	decode_dmi(out_text, out_address, out_data);
 	decode_dmi(in_text, in_address, in_data);
 	if (in_text[0] || out_text[0]) {
-		log_printf_lf(LOG_LVL_DEBUG, __FILE__, __LINE__, "scan", "%s -> %s",
-				out_text, in_text);
+		if (0)
+			log_printf_lf(LOG_LVL_DEBUG, __FILE__, __LINE__, "scan", "%s -> %s",
+					out_text, in_text);
 	}
 }
 
@@ -4360,7 +4362,8 @@ int riscv013_write_debug_buffer(struct target *target, unsigned index, riscv_ins
 			return ERROR_FAIL;
 		dm->progbuf_cache[index] = data;
 	} else {
-		LOG_DEBUG("cache hit for 0x%" PRIx32 " @%d", data, index);
+		if (0)
+			LOG_DEBUG("cache hit for 0x%" PRIx32 " @%d", data, index);
 	}
 	return ERROR_OK;
 }
