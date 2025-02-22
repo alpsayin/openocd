@@ -2084,7 +2084,8 @@ static enum riscv_poll_hart riscv_poll_hart(struct target *target, int hartid)
 	if (riscv_set_current_hartid(target, hartid) != ERROR_OK)
 		return RPH_ERROR;
 
-	LOG_DEBUG("polling hart %d, target->state=%d", hartid, target->state);
+	if (0)
+		LOG_DEBUG("polling hart %d, target->state=%d", hartid, target->state);
 
 	/* If OpenOCD thinks we're running but this hart is halted then it's time
 	 * to raise an event. */
@@ -2179,7 +2180,8 @@ exit:
 /*** OpenOCD Interface ***/
 int riscv_openocd_poll(struct target *target)
 {
-	LOG_DEBUG("polling all harts");
+	if (0)
+		LOG_DEBUG("polling all harts");
 	int halted_hart = -1;
 
 	if (target->smp) {
@@ -3291,7 +3293,8 @@ int riscv_set_current_hartid(struct target *target, int hartid)
 
 	int previous_hartid = riscv_current_hartid(target);
 	r->current_hartid = hartid;
-	LOG_DEBUG("setting hartid to %d, was %d", hartid, previous_hartid);
+	if (0)
+		LOG_DEBUG("setting hartid to %d, was %d", hartid, previous_hartid);
 	if (r->select_current_hart(target) != ERROR_OK)
 		return ERROR_FAIL;
 
@@ -3436,8 +3439,9 @@ int riscv_get_register(struct target *target, riscv_reg_t *value,
 	if (result == ERROR_OK)
 		reg->valid = gdb_regno_cacheable(regid, false);
 
-	LOG_DEBUG("[%s] %s: %" PRIx64, target_name(target),
-			gdb_regno_name(regid), *value);
+	if (0)
+		LOG_DEBUG("[%s] %s: %" PRIx64, target_name(target),
+				gdb_regno_name(regid), *value);
 	return result;
 }
 
