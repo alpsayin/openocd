@@ -781,14 +781,15 @@ static int execute_abstract_command(struct target *target, uint32_t command)
 	if (debug_level >= LOG_LVL_DEBUG) {
 		switch (get_field(command, DM_COMMAND_CMDTYPE)) {
 			case 0:
-				LOG_DEBUG("command=0x%x; access register, size=%d, postexec=%d, "
-						"transfer=%d, write=%d, regno=0x%x",
-						command,
-						8 << get_field(command, AC_ACCESS_REGISTER_AARSIZE),
-						get_field(command, AC_ACCESS_REGISTER_POSTEXEC),
-						get_field(command, AC_ACCESS_REGISTER_TRANSFER),
-						get_field(command, AC_ACCESS_REGISTER_WRITE),
-						get_field(command, AC_ACCESS_REGISTER_REGNO));
+				if (0)
+					LOG_DEBUG("command=0x%x; access register, size=%d, postexec=%d, "
+							"transfer=%d, write=%d, regno=0x%x",
+							command,
+							8 << get_field(command, AC_ACCESS_REGISTER_AARSIZE),
+							get_field(command, AC_ACCESS_REGISTER_POSTEXEC),
+							get_field(command, AC_ACCESS_REGISTER_TRANSFER),
+							get_field(command, AC_ACCESS_REGISTER_WRITE),
+							get_field(command, AC_ACCESS_REGISTER_REGNO));
 				break;
 			default:
 				LOG_DEBUG("command=0x%x", command);
@@ -3266,7 +3267,8 @@ static int read_memory_progbuf_inner(struct target *target, target_addr_t addres
 		assert(index >= 2);
 		for (unsigned j = index - 2; j < index + reads; j++) {
 			assert(j < count);
-			LOG_DEBUG("index=%d, reads=%d, next_index=%d, ignore_last=%d, j=%d",
+			if (0)
+				LOG_DEBUG("index=%d, reads=%d, next_index=%d, ignore_last=%d, j=%d",
 				index, reads, next_index, ignore_last, j);
 			if (j + 3 + ignore_last > next_index)
 				break;

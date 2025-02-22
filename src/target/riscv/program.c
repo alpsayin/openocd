@@ -32,7 +32,8 @@ int riscv_program_init(struct riscv_program *p, struct target *target)
 int riscv_program_write(struct riscv_program *program)
 {
 	for (unsigned i = 0; i < program->instruction_count; ++i) {
-		LOG_DEBUG("debug_buffer[%02x] = DASM(0x%08x)", i, program->debug_buffer[i]);
+		if (0)
+			LOG_DEBUG("debug_buffer[%02x] = DASM(0x%08x)", i, program->debug_buffer[i]);
 		if (riscv_write_debug_buffer(program->target, i,
 					program->debug_buffer[i]) != ERROR_OK)
 			return ERROR_FAIL;
