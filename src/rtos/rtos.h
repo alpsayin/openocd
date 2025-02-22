@@ -22,6 +22,7 @@
 #include "server/server.h"
 #include "target/target.h"
 #include <helper/jim-nvp.h>
+#include "alptrace.h"
 
 typedef int64_t threadid_t;
 typedef int64_t symbol_address_t;
