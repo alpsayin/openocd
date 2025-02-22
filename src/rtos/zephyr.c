@@ -23,6 +23,8 @@
 #include "target/target_type.h"
 #include "target/armv7m.h"
 #include "target/arc.h"
+#include "target/riscv/encoding.h"
+#include "target/riscv/gdb_regs.h"
 
 #define UNIMPLEMENTED 0xFFFFFFFFU
 
@@ -105,6 +107,41 @@ static const struct stack_register_offset arc_callee_saved[] = {
 	{ ARC_FP,  56,  32 },
 	{ ARC_R30,  60,  32 }
 };
+
+#if 0
+static const struct stack_register_offset riscv_callee_saved[] = {
+	{ GDB_REGNO_SP,  0,  32 },
+	{ GDB_REGNO_RA,  4,  32 },
+	{ GDB_REGNO_S0,  8,  32 },
+	{ GDB_REGNO_S1,  12,  32 },
+	{ GDB_REGNO_S2,  16,  32 },
+	{ GDB_REGNO_S3,  20,  32 },
+	{ GDB_REGNO_S4,  24,  32 },
+	{ GDB_REGNO_S5,  28,  32 },
+	{ GDB_REGNO_S6,  32,  32 },
+	{ GDB_REGNO_S7,  36,  32 },
+	{ GDB_REGNO_S8,  40,  32 },
+	{ GDB_REGNO_S9,  44,  32 },
+	{ GDB_REGNO_S10, 48,  32 },
+	{ GDB_REGNO_S11, 52,  32 },
+};
+#else
+static const struct stack_register_offset riscv_callee_saved[] = {
+	{ GDB_REGNO_RA,  0,  32 },
+	{ GDB_REGNO_S0,  4,  32 },
+	{ GDB_REGNO_S1,  8,  32 },
+	{ GDB_REGNO_S2,  12,  32 },
+	{ GDB_REGNO_S3,  26,  32 },
+	{ GDB_REGNO_S4,  20,  32 },
+	{ GDB_REGNO_S5,  24,  32 },
+	{ GDB_REGNO_S6,  28,  32 },
+	{ GDB_REGNO_S7,  32,  32 },
+	{ GDB_REGNO_S8,  36,  32 },
+	{ GDB_REGNO_S9,  40,  32 },
+	{ GDB_REGNO_S10, 44,  32 },
+	{ GDB_REGNO_S11, 48,  32 },
+};
+#endif
 static const struct rtos_register_stacking arm_callee_saved_stacking = {
 	.stack_registers_size = 36,
 	.stack_growth_direction = -1,
@@ -117,6 +154,13 @@ static const struct rtos_register_stacking arc_callee_saved_stacking = {
 	.stack_growth_direction = -1,
 	.num_output_registers = ARRAY_SIZE(arc_callee_saved),
 	.register_offsets = arc_callee_saved,
+};
+
+static const struct rtos_register_stacking riscv_callee_saved_stacking = {
+	.stack_registers_size = ARRAY_SIZE(arm_callee_saved) * 4,
+	.stack_growth_direction = -1,
+	.num_output_registers = ARRAY_SIZE(riscv_callee_saved),
+	.register_offsets = riscv_callee_saved,
 };
 
 static const struct stack_register_offset arm_cpu_saved[] = {
@@ -331,6 +375,40 @@ static int zephyr_get_arm_state(struct rtos *rtos, target_addr_t *addr,
 	return 0;
 }
 
+/* Riscv implementation */
+static int zephyr_get_riscv_state(struct rtos *rtos, target_addr_t *addr,
+	struct zephyr_params *params,
+	struct rtos_reg *callee_saved_reg_list,
+	struct rtos_reg **reg_list, int *num_regs)
+{
+	uint32_t real_stack_addr;
+	int retval = 0;
+	int num_callee_saved_regs;
+
+	/* Getting real stack address from Kernel thread struct */
+	retval = target_read_u32(rtos->target, *addr, &real_stack_addr);
+	if (retval != ERROR_OK)
+		return retval;
+
+	alp_trace_vars(PRIx32, (uint32_t)*addr, real_stack_addr);
+
+	/* Getting callee registers */
+	retval = rtos_generic_stack_read(rtos->target,
+			params->callee_saved_stacking,
+			real_stack_addr, &callee_saved_reg_list,
+			&num_callee_saved_regs);
+	if (retval != ERROR_OK)
+		return retval;
+
+	for (int i = 0; i < num_callee_saved_regs; i++)
+		buf_cpy(callee_saved_reg_list[i].value,
+			(*reg_list)[callee_saved_reg_list[i].number].value,
+			callee_saved_reg_list[i].size);
+
+	return retval;
+}
+
+
 static struct zephyr_params zephyr_params_list[] = {
 	{
 		.target_name = "cortex_m",
@@ -363,6 +441,12 @@ static struct zephyr_params zephyr_params_list[] = {
 		.callee_saved_stacking = &arc_callee_saved_stacking,
 		.cpu_saved_nofp_stacking = &arc_cpu_saved_stacking,
 		.get_cpu_state = &zephyr_get_arc_state,
+	},
+	{
+		.target_name = "riscv",
+		.pointer_width = 4,
+		.callee_saved_stacking = &riscv_callee_saved_stacking,
+		.get_cpu_state = &zephyr_get_riscv_state,
 	},
 	{
 		.target_name = NULL

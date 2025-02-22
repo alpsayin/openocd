@@ -607,12 +607,12 @@ int rtos_generic_stack_read(struct target *target,
 		LOG_ERROR("Error reading stack frame from thread");
 		return retval;
 	}
-	LOG_DEBUG("RTOS: Read stack frame at 0x%" PRIx32, address);
+	alp_trace("RTOS: Read stack frame at 0x%" PRIx32, address);
 
-#if 0
-		LOG_OUTPUT("Stack Data :");
-		for (i = 0; i < stacking->stack_registers_size; i++)
-			LOG_OUTPUT("%02X", stack_data[i]);
+#if 1
+		LOG_OUTPUT("Stack Data addr=0x%lx: ", stack_ptr);
+		for (int _i = 0; _i < stacking->stack_registers_size; _i+=4)
+			LOG_OUTPUT("%02x%02x%02x%02x ", stack_data[_i+3], stack_data[_i+2], stack_data[_i+1], stack_data[_i]);
 		LOG_OUTPUT("\r\n");
 #endif
 
@@ -624,9 +624,10 @@ int rtos_generic_stack_read(struct target *target,
 		new_stack_ptr = stack_ptr - stacking->stack_growth_direction *
 			stacking->stack_registers_size;
 	}
-
 	*reg_list = calloc(stacking->num_output_registers, sizeof(struct rtos_reg));
 	*num_regs = stacking->num_output_registers;
+
+	alp_trace_vars(PRIu32, *num_regs);
 
 	for (int i = 0; i < stacking->num_output_registers; ++i) {
 		(*reg_list)[i].number = stacking->register_offsets[i].number;
@@ -637,6 +638,9 @@ int rtos_generic_stack_read(struct target *target,
 			buf_cpy(&new_stack_ptr, (*reg_list)[i].value, (*reg_list)[i].size);
 		else if (offset != -1)
 			buf_cpy(stack_data + offset, (*reg_list)[i].value, (*reg_list)[i].size);
+
+		uint32_t value = *(uint32_t*)((*reg_list)[i].value);
+		alp_trace("reg[%d]: num=%d size=%d, value=0x%x", i, (*reg_list)[i].number, (*reg_list)[i].size, value);
 	}
 
 	free(stack_data);
