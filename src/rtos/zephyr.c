@@ -485,7 +485,7 @@ static int zephyr_get_riscv_state(struct rtos *rtos, target_addr_t *addr,
 	if (retval != ERROR_OK)
 		return retval;
 
-	alp_trace("Marker 0");
+	LOG_DEBUG("Marker 0");
 
 	/* This part is a bit weird; this is absolutely necessary because rtos_generic_stack_read initializes
 	 * a neat little GDB compatible register list for us. But then we move onto reading some bogus values
@@ -497,14 +497,14 @@ static int zephyr_get_riscv_state(struct rtos *rtos, target_addr_t *addr,
 			reg_list, num_regs);
 	if (retval != ERROR_OK)
 			return retval;
-	alp_trace("Marker 1");
+	LOG_DEBUG("Marker 1");
 
 	/* Then we copy over the stuff we read via callee_saved_stacking onto their correct gdb compatible indexes
 	 * in the reg_list. What I'm afraid is what happens to the bogus values we read from the stack in the previous
 	 * rtos_generic_stack_read call.
 	 */
 	for (int i = 0; i < num_callee_saved_regs; i++) {
-		alp_trace("reg[%d]->reg[%d]: old=0x%x new=0x%x, same=%x",
+		LOG_DEBUG("reg[%d]->reg[%d]: old=0x%x new=0x%x, same=0x%x",
 			i, callee_saved_reg_list[i].number,
 			*(uint32_t *)((*reg_list)[callee_saved_reg_list[i].number].value),
 			*(uint32_t *)callee_saved_reg_list[i].value,
@@ -514,7 +514,7 @@ static int zephyr_get_riscv_state(struct rtos *rtos, target_addr_t *addr,
 			callee_saved_reg_list[i].size);
 	}
 
-	alp_trace("Marker 2");
+	LOG_DEBUG("Marker 2");
 	return retval;
 }
 
@@ -703,7 +703,8 @@ static int zephyr_fetch_thread(const struct rtos *rtos,
 	if (retval != ERROR_OK)
 		return retval;
 
-	alp_trace_vars(PRIx32, thread->ptr, thread->next_ptr, thread->stack_pointer);
+	LOG_DEBUG("thread->ptr=0x%x, thread->next_ptr=0x%x, thread->stack_pointer=0x%x",
+			thread->ptr, thread->next_ptr, thread->stack_pointer);
 
 	retval = target_read_u8(rtos->target, ptr + param->offsets[OFFSET_T_STATE],
 				&thread->state);
@@ -757,7 +758,8 @@ static int zephyr_fetch_thread_list(struct rtos *rtos, uint32_t current_thread)
 		return retval;
 	}
 
-	alp_trace_x32(zephyr_kptr(rtos, OFFSET_K_THREADS), curr);
+	LOG_DEBUG("zephyr_kptr(rtos, OFFSET_K_THREADS)=0x%x, curr=0x%x",
+		zephyr_kptr(rtos, OFFSET_K_THREADS), curr);
 
 	zephyr_array_init(&thread_array);
 
@@ -771,7 +773,7 @@ static int zephyr_fetch_thread_list(struct rtos *rtos, uint32_t current_thread)
 			goto error;
 
 		td->threadid = thread.ptr;
-		alp_trace_vars(PRIx32, (uint32_t)td->threadid);
+		LOG_DEBUG("td->threadid=0x%x", (uint32_t)td->threadid);
 		td->exists = true;
 
 		if (thread.name[0])
@@ -796,7 +798,7 @@ static int zephyr_fetch_thread_list(struct rtos *rtos, uint32_t current_thread)
 	rtos->thread_details = zephyr_array_detach_ptr(&thread_array);
 
 	rtos->current_threadid = curr_id;
-	alp_trace_vars(PRIx32, (uint32_t)rtos->current_threadid);
+	LOG_DEBUG("rtos->current_threadid=%lx", rtos->current_threadid);
 	rtos->current_thread = current_thread;
 
 	return ERROR_OK;
@@ -903,7 +905,7 @@ static int zephyr_update_threads(struct rtos *rtos)
 			return ERROR_FAIL;
 		}
 		else {
-			LOG_INFO("Zephyr offset %zu: 0x%" PRIx32, i, param->offsets[i]);
+			LOG_DEBUG("Zephyr offset %zu: 0x%" PRIx32, i, param->offsets[i]);
 		}
 	}
 
@@ -947,14 +949,15 @@ static int zephyr_get_thread_reg_list(struct rtos *rtos, int64_t thread_id,
 	if (!params)
 		return ERROR_FAIL;
 
-	alp_trace_vars(PRIx32, (uint32_t)thread_id, params->offsets[OFFSET_T_STACK_POINTER], params->callee_saved_stacking->register_offsets[0].offset);
+	LOG_DEBUG("thread_id=%lx, params->offsets[OFFSET_T_STACK_POINTER]=%x, params->callee_saved_stacking->register_offsets[0].offset=%x",
+		thread_id, params->offsets[OFFSET_T_STACK_POINTER], params->callee_saved_stacking->register_offsets[0].offset);
 
 	addr = thread_id + params->offsets[OFFSET_T_STACK_POINTER]
 		 - params->callee_saved_stacking->register_offsets[0].offset;
 
 	retval = params->get_cpu_state(rtos, &addr, params, callee_saved_reg_list, reg_list, num_regs);
 
-	alp_trace("Marker 3");
+	LOG_DEBUG("Marker 3");
 
 	free(callee_saved_reg_list);
 

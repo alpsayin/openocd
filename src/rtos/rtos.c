@@ -556,14 +556,14 @@ int rtos_get_gdb_reg_list(struct connection *connection)
 				current_threadid,
 				&reg_list,
 				&num_regs);
-		alp_trace("Marker 4");
+		LOG_DEBUG("Marker 4");
 		if (retval != ERROR_OK) {
 			LOG_ERROR("RTOS: failed to get register list");
 			return retval;
 		}
 
 		rtos_put_gdb_reg_list(connection, reg_list, num_regs);
-		alp_trace("Marker 5");
+		LOG_DEBUG("Marker 5");
 		free(reg_list);
 
 		return ERROR_OK;
@@ -609,7 +609,7 @@ int rtos_generic_stack_read(struct target *target,
 		LOG_ERROR("Error reading stack frame from thread");
 		return retval;
 	}
-	alp_trace("RTOS: Read stack frame at 0x%" PRIx32, address);
+	LOG_DEBUG("RTOS: Read stack frame at 0x%" PRIx32, address);
 
 #if 1
 		LOG_OUTPUT("Stack Data addr=0x%lx: ", stack_ptr);
@@ -629,7 +629,7 @@ int rtos_generic_stack_read(struct target *target,
 	*reg_list = calloc(stacking->num_output_registers, sizeof(struct rtos_reg));
 	*num_regs = stacking->num_output_registers;
 
-	alp_trace_vars(PRIu32, *num_regs);
+	LOG_DEBUG("*num_regs=0x%x", *num_regs);
 
 	for (int i = 0; i < stacking->num_output_registers; ++i) {
 		(*reg_list)[i].number = stacking->register_offsets[i].number;
@@ -642,7 +642,8 @@ int rtos_generic_stack_read(struct target *target,
 			buf_cpy(stack_data + offset, (*reg_list)[i].value, (*reg_list)[i].size);
 
 		uint32_t value = *(uint32_t*)((*reg_list)[i].value);
-		alp_trace("reg[%d]: num=%d size=%d, value=0x%x", i, (*reg_list)[i].number, (*reg_list)[i].size, value);
+		LOG_DEBUG("reg[%d]: num=%d size=%d, value=0x%x", i, (*reg_list)[i].number, (*reg_list)[i].size, value);
+		LOG_DEBUG("reg[%d]: num=%d size=%d, value=0x%x", i, (*reg_list)[i].number, (*reg_list)[i].size, value);
 	}
 
 	free(stack_data);
