@@ -398,7 +398,8 @@ static void gdb_log_incoming_packet(struct connection *connection, char *packet)
 		}
 	} else {
 		/* All chars printable, dump the packet as is */
-		LOG_TARGET_DEBUG(target, "received packet: %s", packet);
+		if (0)
+			LOG_TARGET_DEBUG(target, "received packet: %s", packet);
 	}
 }
 
@@ -414,8 +415,9 @@ static void gdb_log_outgoing_packet(struct connection *connection, char *packet_
 		LOG_TARGET_DEBUG(target, "sending packet: $<binary-data-%u-bytes>#%2.2x",
 			packet_len, checksum);
 	else
-		LOG_TARGET_DEBUG(target, "sending packet: $%.*s#%2.2x", packet_len, packet_buf,
-			checksum);
+		if (0)
+			LOG_TARGET_DEBUG(target, "sending packet: $%.*s#%2.2x", packet_len, packet_buf,
+				checksum);
 }
 
 static int gdb_put_packet_inner(struct connection *connection,
@@ -1528,7 +1530,8 @@ static int gdb_read_memory_packet(struct connection *connection,
 
 	buffer = malloc(len);
 
-	LOG_DEBUG("addr: 0x%16.16" PRIx64 ", len: 0x%8.8" PRIx32 "", addr, len);
+	if (0)
+		LOG_DEBUG("addr: 0x%16.16" PRIx64 ", len: 0x%8.8" PRIx32 "", addr, len);
 
 	retval = ERROR_NOT_IMPLEMENTED;
 	if (target->rtos)
