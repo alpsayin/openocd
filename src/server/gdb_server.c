@@ -411,13 +411,14 @@ static void gdb_log_outgoing_packet(struct connection *connection, char *packet_
 
 	struct target *target = get_target_from_connection(connection);
 
-	if (find_nonprint_char(packet_buf, packet_len))
-		LOG_TARGET_DEBUG(target, "sending packet: $<binary-data-%u-bytes>#%2.2x",
-			packet_len, checksum);
-	else
-		if (0)
+	if (0) {
+		if (find_nonprint_char(packet_buf, packet_len))
+			LOG_TARGET_DEBUG(target, "sending packet: $<binary-data-%u-bytes>#%2.2x",
+				packet_len, checksum);
+		else
 			LOG_TARGET_DEBUG(target, "sending packet: $%.*s#%2.2x", packet_len, packet_buf,
 				checksum);
+	}
 }
 
 static int gdb_put_packet_inner(struct connection *connection,

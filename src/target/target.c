@@ -2480,8 +2480,9 @@ static int target_write_buffer_default(struct target *target,
  */
 int target_read_buffer(struct target *target, target_addr_t address, uint32_t size, uint8_t *buffer)
 {
-	LOG_DEBUG("reading buffer of %" PRIu32 " byte at " TARGET_ADDR_FMT,
-			  size, address);
+	if (0)
+		LOG_DEBUG("reading buffer of %" PRIu32 " byte at " TARGET_ADDR_FMT,
+					size, address);
 
 	if (!target_was_examined(target)) {
 		LOG_ERROR("Target not examined yet");

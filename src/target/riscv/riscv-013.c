@@ -1303,8 +1303,9 @@ static bool has_sufficient_progbuf(struct target *target, unsigned size)
 static int register_write_direct(struct target *target, unsigned number,
 		uint64_t value)
 {
-	LOG_DEBUG("{%d} %s <- 0x%" PRIx64, riscv_current_hartid(target),
-			gdb_regno_name(number), value);
+	if (0)
+		LOG_DEBUG("{%d} %s <- 0x%" PRIx64, riscv_current_hartid(target),
+				gdb_regno_name(number), value);
 
 	int result = register_write_abstract(target, number, value,
 			register_size(target, number));
@@ -1492,8 +1493,9 @@ static int register_read_direct(struct target *target, uint64_t *value, uint32_t
 	}
 
 	if (result == ERROR_OK) {
-		LOG_DEBUG("{%d} %s = 0x%" PRIx64, riscv_current_hartid(target),
-				gdb_regno_name(number), *value);
+		if (0)
+			LOG_DEBUG("{%d} %s = 0x%" PRIx64, riscv_current_hartid(target),
+					gdb_regno_name(number), *value);
 	}
 
 	return result;
@@ -2506,7 +2508,8 @@ static void log_memory_access(target_addr_t address, uint64_t value,
 		default:
 			assert(false);
 	}
-	LOG_DEBUG(fmt, value);
+	if (0)
+		LOG_DEBUG(fmt, value);
 }
 
 /* Read the relevant sbdata regs depending on size, and put the results into
@@ -2847,7 +2850,8 @@ static void log_mem_access_result(struct target *target, bool success, int metho
 	if (warn)
 		LOG_WARNING("%s", msg);
 	else
-		LOG_DEBUG("%s", msg);
+		if (0)
+			LOG_DEBUG("%s", msg);
 }
 
 static bool mem_should_skip_progbuf(struct target *target, target_addr_t address,
@@ -3155,7 +3159,8 @@ static int read_memory_progbuf_inner(struct target *target, target_addr_t addres
 	unsigned index = 2;
 	while (index < count) {
 		riscv_addr_t read_addr = address + index * increment;
-		LOG_DEBUG("i=%d, count=%d, read_addr=0x%" PRIx64, index, count, read_addr);
+		if (0)
+			LOG_DEBUG("i=%d, count=%d, read_addr=0x%" PRIx64, index, count, read_addr);
 		/* The pipeline looks like this:
 		 * memory -> s1 -> dm_data0 -> debugger
 		 * Right now:
@@ -3197,7 +3202,8 @@ static int read_memory_progbuf_inner(struct target *target, target_addr_t addres
 		unsigned ignore_last = 0;
 		switch (info->cmderr) {
 			case CMDERR_NONE:
-				LOG_DEBUG("successful (partial?) memory read");
+				if (0)
+					LOG_DEBUG("successful (partial?) memory read");
 				next_index = index + reads;
 				break;
 			case CMDERR_BUSY:
@@ -3432,8 +3438,9 @@ static int read_memory_progbuf(struct target *target, target_addr_t address,
 
 	int result = ERROR_OK;
 
-	LOG_DEBUG("reading %d words of %d bytes from 0x%" TARGET_PRIxADDR, count,
-			size, address);
+	if (0)
+		LOG_DEBUG("reading %d words of %d bytes from 0x%" TARGET_PRIxADDR, count,
+				size, address);
 
 	select_dmi(target);
 
@@ -4075,8 +4082,9 @@ struct target_type riscv013_target = {
 static int riscv013_get_register(struct target *target,
 		riscv_reg_t *value, int rid)
 {
-	LOG_DEBUG("[%s] reading register %s", target_name(target),
-			gdb_regno_name(rid));
+	if (0)
+		LOG_DEBUG("[%s] reading register %s", target_name(target),
+				gdb_regno_name(rid));
 
 	if (riscv_select_current_hart(target) != ERROR_OK)
 		return ERROR_FAIL;
@@ -4104,8 +4112,9 @@ static int riscv013_get_register(struct target *target,
 static int riscv013_set_register(struct target *target, int rid, uint64_t value)
 {
 	riscv013_select_current_hart(target);
-	LOG_DEBUG("[%d] writing 0x%" PRIx64 " to register %s",
-			target->coreid, value, gdb_regno_name(rid));
+	if (0)
+		LOG_DEBUG("[%d] writing 0x%" PRIx64 " to register %s",
+				target->coreid, value, gdb_regno_name(rid));
 
 	if (rid <= GDB_REGNO_XPR31) {
 		return register_write_direct(target, rid, value);

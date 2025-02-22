@@ -1540,7 +1540,8 @@ static int riscv_mmu(struct target *target, int *enabled)
 	}
 
 	if ((get_field(mstatus, MSTATUS_MPRV) ? get_field(mstatus, MSTATUS_MPP) : priv) == PRV_M) {
-		LOG_DEBUG("SATP/MMU ignored in Machine mode (mstatus=0x%" PRIx64 ").", mstatus);
+		if (0)
+			LOG_DEBUG("SATP/MMU ignored in Machine mode (mstatus=0x%" PRIx64 ").", mstatus);
 		*enabled = 0;
 		return ERROR_OK;
 	}
@@ -3383,7 +3384,8 @@ static bool gdb_regno_cacheable(enum gdb_regno regno, bool write)
 int riscv_set_register(struct target *target, enum gdb_regno regid, riscv_reg_t value)
 {
 	RISCV_INFO(r);
-	LOG_DEBUG("[%s] %s <- %" PRIx64, target_name(target), gdb_regno_name(regid), value);
+	if (0)
+		LOG_DEBUG("[%s] %s <- %" PRIx64, target_name(target), gdb_regno_name(regid), value);
 	assert(r->set_register);
 
 	keep_alive();
@@ -3401,8 +3403,9 @@ int riscv_set_register(struct target *target, enum gdb_regno regid, riscv_reg_t 
 		reg->valid = gdb_regno_cacheable(regid, true);
 	else
 		reg->valid = false;
-	LOG_DEBUG("[%s] wrote 0x%" PRIx64 " to %s valid=%d",
-			  target_name(target), value, reg->name, reg->valid);
+	if (0)
+		LOG_DEBUG("[%s] wrote 0x%" PRIx64 " to %s valid=%d",
+				  target_name(target), value, reg->name, reg->valid);
 	return result;
 }
 
@@ -3422,8 +3425,9 @@ int riscv_get_register(struct target *target, riscv_reg_t *value,
 
 	if (reg && reg->valid) {
 		*value = buf_get_u64(reg->value, 0, reg->size);
-		LOG_DEBUG("[%s] %s: %" PRIx64 " (cached)", target_name(target),
-				  gdb_regno_name(regid), *value);
+		if (0)
+			LOG_DEBUG("[%s] %s: %" PRIx64 " (cached)", target_name(target),
+						gdb_regno_name(regid), *value);
 		return ERROR_OK;
 	}
 
