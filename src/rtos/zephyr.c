@@ -108,7 +108,6 @@ static const struct stack_register_offset arc_callee_saved[] = {
 	{ ARC_R30,  60,  32 }
 };
 
-#if 1
 static const struct stack_register_offset riscv_callee_saved[] = {
 	{ GDB_REGNO_SP,  0,  32 },
 	{ GDB_REGNO_RA,  4,  32 },
@@ -166,64 +165,6 @@ static struct stack_register_offset riscv_cpu_saved[] = {
 	{GDB_REGNO_PC, -1, 32},
 };
 
-#else
-static const struct stack_register_offset riscv_callee_saved[] = {
-	{ GDB_REGNO_RA,  0,  32 },
-	{ GDB_REGNO_S0,  4,  32 },
-	{ GDB_REGNO_S1,  8,  32 },
-	{ GDB_REGNO_S2,  12,  32 },
-	{ GDB_REGNO_S3,  26,  32 },
-	{ GDB_REGNO_S4,  20,  32 },
-	{ GDB_REGNO_S5,  24,  32 },
-	{ GDB_REGNO_S6,  28,  32 },
-	{ GDB_REGNO_S7,  32,  32 },
-	{ GDB_REGNO_S8,  36,  32 },
-	{ GDB_REGNO_S9,  40,  32 },
-	{ GDB_REGNO_S10, 44,  32 },
-	{ GDB_REGNO_S11, 48,  32 },
-};
-
-/* There are no riscv cpu saved registers; hope this works */
-static struct stack_register_offset riscv_cpu_saved[] = {
-	{GDB_REGNO_ZERO, -1, 32},        /* Read-only register, always 0.  */
-	{GDB_REGNO_RA, 0, 32},          /* Return Address.  */
-	{GDB_REGNO_SP, -2, 32},          /* Stack Pointer.  */
-	{GDB_REGNO_GP, -1, 32},          /* Global Pointer.  */
-	{GDB_REGNO_TP, -1, 32},          /* Thread Pointer.  */
-	{GDB_REGNO_T0, -1, 32},
-	{GDB_REGNO_T1, -1, 32},
-	{GDB_REGNO_T2, -1, 32},
-	{GDB_REGNO_S0, 4, 32},
-	{GDB_REGNO_FP, 4, 32},          /* Frame Pointer.  */
-	{GDB_REGNO_S1, 8, 32},
-	{GDB_REGNO_A0, -1, 32},         /* First argument.  */
-	{GDB_REGNO_A1, -1, 32},         /* Second argument.  */
-	{GDB_REGNO_A2, -1, 32},
-	{GDB_REGNO_A3, -1, 32},
-	{GDB_REGNO_A4, -1, 32},
-	{GDB_REGNO_A5, -1, 32},
-	{GDB_REGNO_XPR15, -1, 32},
-	{GDB_REGNO_A6, -1, 32},
-	{GDB_REGNO_A7, -1, 32},
-	{GDB_REGNO_S2, 12, 32},
-	{GDB_REGNO_S3, 16, 32},
-	{GDB_REGNO_S4, 20, 32},
-	{GDB_REGNO_S5, 24, 32},
-	{GDB_REGNO_S6, 28, 32},
-	{GDB_REGNO_S7, 32, 32},
-	{GDB_REGNO_S8, 36, 32},
-	{GDB_REGNO_S9, 40, 32},
-	{GDB_REGNO_S10, 44, 32},
-	{GDB_REGNO_S11, 48, 32},
-	{GDB_REGNO_T3, -1, 32},
-	{GDB_REGNO_T4, -1, 32},
-	{GDB_REGNO_T5, -1, 32},
-	{GDB_REGNO_T6, -1, 32},
-	{GDB_REGNO_XPR31, -1, 32},
-	{GDB_REGNO_PC, -1, 32},
-};
-
-#endif
 static const struct rtos_register_stacking arm_callee_saved_stacking = {
 	.stack_registers_size = 36,
 	.stack_growth_direction = -1,
