@@ -20,7 +20,7 @@
     {
       "label": "rtl01: bootstrap & configure",
       "type": "shell",
-      "command": "ssh -t rtl01 'cd ${workspaceFolder} && ./bootstrap && ./configure --prefix=/home/asayin/openocd_rhle8/ --enable-ftdi'",
+      "command": "ssh -t rtl01 'cd ${workspaceFolder} && ./bootstrap && ./configure --prefix=/home/asayin/openocd_rhel8/ --enable-ftdi'",
       "options": {
         "statusbar": {
           "hide": true,
