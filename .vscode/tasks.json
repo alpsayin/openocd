@@ -36,7 +36,7 @@
     {
       "label": "vdi: make & copy",
       "type": "shell",
-      "command": "ssh -t vdi 'cd ${workspaceFolder} && make -j  && cp ./src/openocd /proj/driverlab/asayin/openocd_ubuntu22/bin/'",
+      "command": "ssh -t vdi 'cd ${workspaceFolder} && make -j install'  && ssh vdi 'rsync -Rav ~/openocd_ubuntu22/./bin/openocd /proj/driverlab/asayin/openocd_ubuntu22/./'",
       "options": {
         "statusbar": {
           "hide": true,
@@ -52,7 +52,7 @@
     {
       "label": "rtl01: make & copy",
       "type": "shell",
-      "command": "ssh -t rtl01 'cd ${workspaceFolder} && make -j && cp ./src/openocd /proj/driverlab/asayin/openocd_rhel8/bin/'",
+      "command": "ssh -t rtl01 'cd ${workspaceFolder} && make -j install' && ssh vdi 'rsync -Rav ~/openocd_rhel8/./bin/openocd /proj/driverlab/asayin/openocd_rhel8/./'",
       "options": {
         "statusbar": {
           "hide": true,
